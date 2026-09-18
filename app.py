@@ -7,10 +7,17 @@ st.set_page_config(page_title="装备管理系统", page_icon="🎒", layout="wi
 
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# ---------- 数据层 ----------
+# ---------- 数据层（已加入缓存，彻底解决 429 报错）----------
+
+@st.cache_data(ttl=600, show_spinner=False)
+def load_cached_data():
+    # 内部执行实际的读取
+    df = conn.read()
+    return df
 
 def load_data():
-    df = conn.read(ttl="0s")
+    # 每次需要刷新时可以调用此函数，或直接读缓存
+    df = load_cached_data()
     if df.empty or "Equipment" not in df.columns or "Items" not in df.columns:
         return {}
     data = {}
@@ -40,6 +47,8 @@ def save_data(data):
         })
     df = pd.DataFrame(rows if rows else [{"Equipment": "", "Items": ""}])
     conn.update(data=df)
+    # 关键：每次保存数据后，必须清除缓存，确保下次读取到最新数据
+    st.cache_data.clear()
 
 def safe_save(data):
     try:
@@ -112,8 +121,8 @@ if st.session_state.page == "home":
                             detail_bits.append(f"颜色：{m['color']}")
                         if m.get("notes"):
                             detail_bits.append(f"备注：{m['notes']}")
-                        detail_str = "　".join(detail_bits)
-                        st.markdown(f"**{m['name']}** {status}　·　在「{eq_name}」")
+                        detail_str = " ".join(detail_bits)
+                        st.markdown(f"**{m['name']}** {status} · 在「{eq_name}」")
                         if detail_str:
                             st.caption(detail_str)
                     with c2:
@@ -255,19 +264,19 @@ elif st.session_state.page == "detail":
                     with c1:
                         k = f"name_{eq_name}_{i}"
                         st.text_input("名称", value=item["name"], key=k,
-                                      on_change=update_item_field, args=(eq_name, i, "name", k))
+                                     on_change=update_item_field, args=(eq_name, i, "name", k))
                     with c2:
                         k = f"qty_{eq_name}_{i}"
                         st.text_input("数量", value=item.get("quantity", ""), key=k,
-                                      on_change=update_item_field, args=(eq_name, i, "quantity", k))
+                                     on_change=update_item_field, args=(eq_name, i, "quantity", k))
                     with c3:
                         k = f"color_{eq_name}_{i}"
                         st.text_input("颜色", value=item.get("color", ""), key=k,
-                                      on_change=update_item_field, args=(eq_name, i, "color", k))
+                                     on_change=update_item_field, args=(eq_name, i, "color", k))
                     with c4:
                         k = f"notes_{eq_name}_{i}"
                         st.text_input("备注", value=item.get("notes", ""), key=k,
-                                      on_change=update_item_field, args=(eq_name, i, "notes", k))
+                                     on_change=update_item_field, args=(eq_name, i, "notes", k))
                     with c5:
                         st.write("")
                         if st.button("🗑️ 删除", key=f"del_item_{eq_name}_{i}", use_container_width=True):
@@ -290,7 +299,7 @@ elif st.session_state.page == "detail":
                     c1, c2 = st.columns([0.15, 0.85])
                     with c1:
                         is_checked = st.checkbox("已放入", value=item.get("checked", False),
-                                                  key=f"check_{eq_name}_{i}", label_visibility="visible")
+                                                key=f"check_{eq_name}_{i}", label_visibility="visible")
                     with c2:
                         detail_bits = []
                         if item.get("quantity"):
@@ -299,7 +308,7 @@ elif st.session_state.page == "detail":
                             detail_bits.append(f"颜色：{item['color']}")
                         if item.get("notes"):
                             detail_bits.append(f"备注：{item['notes']}")
-                        detail_str = "　|　".join(detail_bits)
+                        detail_str = " | ".join(detail_bits)
                         st.markdown(f"**{item['name']}**")
                         if detail_str:
                             st.caption(detail_str)
@@ -310,3 +319,4 @@ elif st.session_state.page == "detail":
                 equipment_data[eq_name] = items
                 if safe_save(equipment_data):
                     st.rerun()
+                    
