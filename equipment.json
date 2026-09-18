@@ -1,0 +1,113 @@
+{
+    "Bag (1)": [],
+    "Bag (2)": [],
+    "电脑 Bag": [
+        {
+            "name": "Lenovo VivoBook 16 (A1607C)",
+            "taken": false
+        },
+        {
+            "name": "Laptop Charger(2 part,Type C)",
+            "taken": false
+        },
+        {
+            "name": "Mouse",
+            "taken": false
+        },
+        {
+            "name": "Mouse Pad",
+            "taken": false
+        },
+        {
+            "name": "Warranty card",
+            "taken": false
+        },
+        {
+            "name": "USB",
+            "taken": false
+        },
+        {
+            "name": "USB Extension",
+            "taken": false
+        },
+        {
+            "name": "USB 转 Type-C 母口",
+            "taken": false
+        }
+    ],
+    "School Bag": [
+        {
+            "name": "中阮独奏书",
+            "taken": false
+        },
+        {
+            "name": "蓝色乐谱",
+            "taken": false
+        },
+        {
+            "name": "正版Cert",
+            "taken": false
+        },
+        {
+            "name": "Printer Cable (2 part)",
+            "taken": false
+        },
+        {
+            "name": "电壶 Wayar",
+            "taken": false
+        },
+        {
+            "name": "Adapator （中国转马来西亚)",
+            "taken": false
+        },
+        {
+            "name": "写板",
+            "taken": false
+        },
+        {
+            "name": "Type C Cable 1 meter(2x)",
+            "taken": false
+        },
+        {
+            "name": "手机充电头 (1)",
+            "taken": false
+        }
+    ],
+    "Daikin Bag": [
+        {
+            "name": "用着的记事本(2)",
+            "taken": false
+        },
+        {
+            "name": "Dokument(sah)",
+            "taken": false
+        }
+    ],
+    "行李箱 (1)": [],
+    "行李箱 (2)": [],
+    "行李箱 (3)": [],
+    "Bag (3)": [],
+    "Box": [],
+    "中阮盒": [
+        {
+            "name": "中阮",
+            "taken": false
+        },
+        {
+            "name": "中阮布",
+            "taken": false
+        },
+        {
+            "name": "干燥机",
+            "taken": false
+        },
+        {
+            "name": "拨片",
+            "taken": false
+        },
+        {
+            "name": "中阮 一弦",
+            "taken": false
+        }
+    ]
+}
