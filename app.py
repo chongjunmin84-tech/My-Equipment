@@ -242,30 +242,36 @@ elif st.session_state.page == "detail":
         if not items:
             st.info("这个装备里还没有物品。")
         else:
+            def update_item_field(eq_name, index, field, widget_key):
+                fresh_data = load_data()
+                if eq_name in fresh_data and index < len(fresh_data[eq_name]):
+                    fresh_data[eq_name][index][field] = st.session_state[widget_key]
+                    save_data(fresh_data)
+
             item_to_delete = None
             for i, item in enumerate(items):
                 with st.container(border=True):
                     c1, c2, c3, c4, c5 = st.columns([0.28, 0.15, 0.15, 0.27, 0.15])
                     with c1:
-                        item["name"] = st.text_input("名称", value=item["name"], key=f"name_{eq_name}_{i}")
+                        k = f"name_{eq_name}_{i}"
+                        st.text_input("名称", value=item["name"], key=k,
+                                      on_change=update_item_field, args=(eq_name, i, "name", k))
                     with c2:
-                        item["quantity"] = st.text_input("数量", value=item.get("quantity", ""), key=f"qty_{eq_name}_{i}")
+                        k = f"qty_{eq_name}_{i}"
+                        st.text_input("数量", value=item.get("quantity", ""), key=k,
+                                      on_change=update_item_field, args=(eq_name, i, "quantity", k))
                     with c3:
-                        item["color"] = st.text_input("颜色", value=item.get("color", ""), key=f"color_{eq_name}_{i}")
+                        k = f"color_{eq_name}_{i}"
+                        st.text_input("颜色", value=item.get("color", ""), key=k,
+                                      on_change=update_item_field, args=(eq_name, i, "color", k))
                     with c4:
-                        item["notes"] = st.text_input("备注", value=item.get("notes", ""), key=f"notes_{eq_name}_{i}")
+                        k = f"notes_{eq_name}_{i}"
+                        st.text_input("备注", value=item.get("notes", ""), key=k,
+                                      on_change=update_item_field, args=(eq_name, i, "notes", k))
                     with c5:
                         st.write("")
                         if st.button("🗑️ 删除", key=f"del_item_{eq_name}_{i}", use_container_width=True):
                             item_to_delete = i
-
-            save_col1, save_col2 = st.columns([0.8, 0.2])
-            with save_col2:
-                if st.button("💾 保存修改", use_container_width=True, type="primary"):
-                    equipment_data[eq_name] = items
-                    if safe_save(equipment_data):
-                        st.success("已保存")
-                        st.rerun()
 
             if item_to_delete is not None:
                 del items[item_to_delete]
